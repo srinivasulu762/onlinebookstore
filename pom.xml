@@ -76,4 +76,13 @@
 			<version>3.1.0</version>
 		</dependency>
 	</dependencies>
+
+<distributionManagement>
+	 <snapshotRepository>
+	      <id>nexus</id>
+	      <name>oninebookstore Snapshot Nexus Repository </name>
+	      <url>http://52.63.15.88:8081/repository/maven-snapshots/</url>
+	    </snapshotRepository>
+</distributionManagement>
+	
 </project>
