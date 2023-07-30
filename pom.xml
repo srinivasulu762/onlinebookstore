@@ -53,7 +53,7 @@
 	<properties>
 		<sonar.host.url>http://3.27.84.133:9000/</sonar.host.url>
 		<sonar.login>squ_1041f28026961b9902ffa44d74a0e592e61266dd</sonar.login>
-		</properties>
+	</properties>
 	<dependencies>
 
 		<dependency>
