@@ -51,8 +51,8 @@
 		</plugins>
 	</build>
 	<properties>
-		<sonar.host.url>http://3.26.129.122:9000/</sonar.host.url>
-		<sonar.login>squ_1041f28026961b9902ffa44d74a0e592e61266dd</sonar.login>
+		<sonar.host.url>http://13.55.206.249:9000/</sonar.host.url>
+		<sonar.login>squ_d6aee5637d62e77852963e927e3dd74eb03788ac</sonar.login>
 	</properties>
 	<dependencies>
 
