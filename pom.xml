@@ -52,7 +52,7 @@
 	</build>
 	<properties>
 		<sonar.host.url>http://13.55.206.249:9000/</sonar.host.url>
-		<sonar.login>squ_d6aee5637d62e77852963e927e3dd74eb03788ac</sonar.login>
+		<sonar.login>squ_628dd9ea3dd50134dda069895b6f2a5de6a60e90</sonar.login>
 	</properties>
 	<dependencies>
 
