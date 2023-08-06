@@ -51,7 +51,7 @@
 		</plugins>
 	</build>
 	<properties>
-		<sonar.host.url>http://3.27.157.166:9000/</sonar.host.url>
+		<sonar.host.url>http://13.210.171.214:9000/</sonar.host.url>
 		<sonar.login>squ_c3e1dfaf6c2a3fb672d87466d28b4d69e02de11e</sonar.login>
 	</properties>
 	<dependencies>
@@ -81,7 +81,7 @@
 	 <snapshotRepository>
 	      <id>nexus</id>
 	      <name>oninebookstore Snapshot Nexus Repository </name>
-	      <url>http://3.26.39.252:8081/repository/maven-snapshots/</url>
+	      <url>http://3.104.37.216:8081/repository/maven-snapshots/</url>
 	    </snapshotRepository>
 </distributionManagement>
 	
