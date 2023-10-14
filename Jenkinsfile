@@ -7,6 +7,9 @@ tools
 {
 maven 'maven3.9.2'
 }
+parameters {
+  choice choices: ['dev', 'test', 'preprod', 'prod'], name: 'branchname'
+}
 
 environment{
 buildnumber='${BUILD_NUMBER}'
@@ -18,7 +21,7 @@ stage("source code from git")
 {
 steps
 {
-git credentialsId: 'githubcred', url: 'https://github.com/srinivasulu762/onlinebookstore.git'
+git branch: "${params.branchname}", credentialsId: 'githubcred', url: 'https://github.com/srinivasulu762/onlinebookstore.git'
 }
 }
 stage("build")
