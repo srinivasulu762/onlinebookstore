@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onlinebookstoredeployment 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: onlinepod
+  template:
+    metadata:
+      name: onlinebookstoreapppod 
+      labels:
+        name: onlinepod
+    spec:
+      containers:
+      - name: onlinebookstoreapplication
+        image: srinivasulukokkinti/onlinebook:1 
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onlinesvc
+spec:
+  type: LoadBalancer
+  selector:
+    name: onlinepod 
+  ports:
+  - port: 80
+    targetPort: 8080
+        
