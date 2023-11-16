@@ -1,33 +1,43 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: onlinebookstoredeployment 
+  name: onlinebookstoredeployment
+  namespace: d1cdffom
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      name: onlinepod
+      name: onlinebookstorelabel
   template:
     metadata:
-      name: onlinebookstoreapppod 
+      name: onlinebookstorepod
       labels:
-        name: onlinepod
+        name: onlinebookstorelabel
     spec:
       containers:
-      - name: onlinebookstoreapplication
-        image: srinivasulukokkinti/onlinebook:1 
-        ports:
-        - containerPort: 8080
+        - name: onlinebookstoreapplication
+          image: srinivasulukokkinti/onlinebook:1
+          ports:
+            - containerPort: 8080
+          resources:
+            request:
+              cpu: 500m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: onlinesvc
+  name: onlinebookstoresvc
+  namespace: d1cdfom
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-    name: onlinepod 
+    name: onlinebookstorelabel
   ports:
-  - port: 80
-    targetPort: 8080
-        
+    - port: 80
+      targetPort: 8080
