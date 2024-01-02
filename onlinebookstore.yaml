@@ -33,7 +33,7 @@ kind: Service
 metadata:
   name: onlinebookstoresvc
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     name: onlinebookstorelabel
   ports:
