@@ -19,14 +19,6 @@ spec:
           image: srinivasulukokkinti/springnewimagepod:1
           ports:
             - containerPort: 8080
-          resources:
-            request:
-              cpu: 500m
-              memory: 256Mi
-            limits:
-              cpu: 500m
-              memory: 1Gi
-
 ---
 apiVersion: v1
 kind: Service
