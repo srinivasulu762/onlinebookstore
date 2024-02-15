@@ -25,7 +25,7 @@ kind: Service
 metadata:
   name: onlinebookstoresvc
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     name: onlinebookstorelabel
   ports:
