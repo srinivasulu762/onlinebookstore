@@ -5,6 +5,7 @@ metadata:
   name: onlinebookstoredeployment
 spec:
   replicas: 1
+  revisionHistoryLimit: 5
   selector:
     matchLabels:
       name: onlinebookstorelabel
