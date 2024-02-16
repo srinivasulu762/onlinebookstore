@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: onlinebookstoreapplication
-          image: 851725269780.dkr.ecr.ap-south-1.amazonaws.com/onlinebookstoreimage:24
+          image: 851725269780.dkr.ecr.ap-south-1.amazonaws.com/onlinebookstoreimage:replaceImageTag
           ports:
             - containerPort: 8080
 ---
