@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: onlinebookstoredeployment
 spec:
-  replicas: 1
+  replicas: 3
   revisionHistoryLimit: 5
   selector:
     matchLabels:
