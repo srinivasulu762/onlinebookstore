@@ -2,6 +2,11 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,6 +24,15 @@ import com.bittercode.service.impl.UserServiceImpl;
 public class CustomerLoginServlet extends HttpServlet {
 
     UserService authService = new UserServiceImpl();
+     // Database connection variables
+     private static final String db_host = System.getenv("DB_URL"); // Change to your DB URL
+     private static final String db_username = System.getenv("DB_USERNAME");
+     private static final String db_password = System.getenv("DB_PASSWORD");
+     private static final String db_name = System.getenv("DB_NAME");  // Change to your DB password
+     private static final String DB_DRIVER = "org.postgresql.Driver";
+     String uName = req.getParameter(UsersDBConstants.COLUMN_USERNAME);
+     String pWord = req.getParameter(UsersDBConstants.COLUMN_PASSWORD);
+
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         PrintWriter pw = res.getWriter();
@@ -26,8 +40,12 @@ public class CustomerLoginServlet extends HttpServlet {
         String uName = req.getParameter(UsersDBConstants.COLUMN_USERNAME);
         String pWord = req.getParameter(UsersDBConstants.COLUMN_PASSWORD);
         User user = authService.login(UserRole.CUSTOMER, uName, pWord, req.getSession());
-
+        
+        User user = null;
         try {
+            user = authenticateUser(uName, pWord);
+
+
 
             if (user != null) {
 
