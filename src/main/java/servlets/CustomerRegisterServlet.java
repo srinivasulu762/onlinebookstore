@@ -21,9 +21,11 @@ import com.bittercode.service.impl.UserServiceImpl;
 
 public class CustomerRegisterServlet extends HttpServlet {
 
-    private static final String PROPERTIES_FILE = "/WEB-INF/application.properties";  // Path to properties file
+    private static final String PROPERTIES_FILE = "/src/main/resources/application.properties";  // Path to properties file
+    private static final String DB_DRIVER = "org.postgresql.Driver";  // Database Driver
+
     private UserService userService = new UserServiceImpl();
-    
+
     // Load properties from application.properties
     private Properties loadProperties() throws IOException {
         Properties properties = new Properties();
@@ -37,26 +39,29 @@ public class CustomerRegisterServlet extends HttpServlet {
         return properties;
     }
 
+    // Declare DB constants outside the method
+    private static final String DB_URL = System.getenv("DB_URL");  // Get the DB URL from environment variable
+    private static final String DB_USERNAME = System.getenv("DB_USERNAME");  // Get DB username
+    private static final String DB_PASSWORD = System.getenv("DB_PASSWORD");  // Get DB password
+    private static final String DB_NAME = System.getenv("DB_NAME");  // Get DB name
+
+    // Use the environment variables or properties to create the JDBC URL
+    private String getJdbcUrl() {
+        return "jdbc:postgresql://postgres.database.svc.cluster.local:5432/db"
+    }
+
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         PrintWriter pw = res.getWriter();
         res.setContentType(BookStoreConstants.CONTENT_TYPE_TEXT_HTML);
 
-        // Load DB credentials from the properties file
-        private static final String db_host = System.getenv("DB_URL"); // Change to your DB URL
-     private static final String db_username = System.getenv("DB_USERNAME");
-     private static final String db_password = System.getenv("DB_PASSWORD");
-     private static final String db_name = System.getenv("DB_NAME");  // Change to your DB password
-     private static final String DB_DRIVER = "org.postgresql.Driver";
-
-        // Now use the above credentials to connect to your database or configure your ORM (e.g., Hibernate)
-        String jdbcUrl = String db_host = System.getenv("DB_URL")
-
+        // Get form values from the request
         String pWord = req.getParameter(UsersDBConstants.COLUMN_PASSWORD);
         String fName = req.getParameter(UsersDBConstants.COLUMN_FIRSTNAME);
         String lName = req.getParameter(UsersDBConstants.COLUMN_LASTNAME);
         String addr = req.getParameter(UsersDBConstants.COLUMN_ADDRESS);
         String phNo = req.getParameter(UsersDBConstants.COLUMN_PHONE);
         String mailId = req.getParameter(UsersDBConstants.COLUMN_MAILID);
+        
         User user = new User();
         user.setEmailId(mailId);
         user.setFirstName(fName);
