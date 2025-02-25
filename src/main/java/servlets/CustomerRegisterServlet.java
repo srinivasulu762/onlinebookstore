@@ -49,7 +49,7 @@ public class CustomerRegisterServlet extends HttpServlet {
      private static final String DB_DRIVER = "org.postgresql.Driver";
 
         // Now use the above credentials to connect to your database or configure your ORM (e.g., Hibernate)
-        String jdbcUrl = "jdbc:postgresql://postgres.database.svc.cluster.local:5432/db"
+        String jdbcUrl = String db_host = System.getenv("DB_URL")
 
         String pWord = req.getParameter(UsersDBConstants.COLUMN_PASSWORD);
         String fName = req.getParameter(UsersDBConstants.COLUMN_FIRSTNAME);
