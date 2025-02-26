@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  kubernatesdb
+  namespace: dev-swt
+  labels:
+    name:  kubernatesdashboard
+spec:
+  replicas: 1
+  selector:
+   matchLabels:
+    name:  kubernatesdashboard
+  template:
+    metadata:
+      labels:
+        name: kubernatesdashboard
+    spec:
+      containers:
+      - name:  dashborad
+        image: kubernetesui/dashboard:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+        resources:
+          requests:
+            cpu: 20m
+            memory: "55M"
+          limits:
+            cpu: 30m
+            memory: "100M"
+      
+
+
+    
+       
+       

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalncer
+  namespace: database
+spec:
+  selector:
+    app: postgres # This should match the label from the Deployment
+  ports:
+    - protocol: TCP
+      port: 80        # External port
+      targetPort: 5432 # Port on your pods
+  type: LoadBalancer

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  onlinebookstore
+  namespace: dev-swt
+  labels:
+    name:  onlinestore
+spec:
+  replicas: 1
+  selector:
+   matchLabels:
+    name:  onlinestore
+  template:
+    metadata:
+      labels:
+        name: onlinestore
+    spec:
+      containers:
+      - name:  onlinebookstoreapp
+        image: srinivasulukokkinti/onlinebook:1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+         - name: DB_URL
+           value: jdbc:postgresql://namehead.database.svc.cluster.local:5432/db
+         - name: DB_USERNAME
+           value: admin
+         - name: DB_PASSWORD
+           value: admin@123
+         - name: DB_NAME        
+           value: db
+        resources:
+          requests:
+            cpu: 20m
+            memory: "55M"
+          limits:
+            cpu: 30m
+            memory: "100M"
+      imagePullSecrets:
+         - name:  onlinebookstore
+
+
+    
+       
+       

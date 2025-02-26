@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: onlinebookstorecert
+  namespace: dev-swt # Namespace where the certificate and secret will be created
+spec:
+  secretName: cert-managersecret   # Name of the Secret that will be created
+  dnsNames:
+    - ab3aa59a80699402685a071feea3a0dd-1526015442.us-east-1.elb.amazonaws.com
+  issuerRef:
+    name: letsencrypt-prod  # Name of the Issuer or ClusterIssuer
+    kind: ClusterIssuer     # Use "Issuer" if it's a namespaced Issuer
