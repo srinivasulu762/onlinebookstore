@@ -20,4 +20,4 @@ jobs:
       - name: Build package
         run: |
           echo "Building the online bookstore application..."
-          find . -name 'pom.xml'
+          ls -la
