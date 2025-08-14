@@ -1,22 +1,24 @@
 name: onlinebookstore
+
 on:
-  workflow_dispatch:    
+  workflow_dispatch:
+
 jobs:
-   onlinebookstore_build_job:
+  onlinebookstore_build_job:
     runs-on: ubuntu-latest
+
     steps:
-        
       - name: Checkout code repository
         uses: actions/checkout@v4
-      - name: java setup
+
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-            
           java-version: '17'
-          distribution: 'temurin'  
-      - name: build package
+          distribution: 'temurin'
+
+      - name: Build package
         run: |
           echo "Building the online bookstore application..."
-          cd onlinebookstore/WebContent/WEB-INF/pom.xml
+          cd onlinebookstore/WebContent/WEB-INF
           mvn clean package
-             
