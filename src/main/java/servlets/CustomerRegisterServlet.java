@@ -46,8 +46,9 @@ public class CustomerRegisterServlet extends HttpServlet {
     private static final String DB_NAME = System.getenv("DB_NAME");  // Get DB name
 
     // Use the environment variables or properties to create the JDBC URL
-    private String getJdbcUrl() {
-        return "jdbc:postgresql://postgres.database.svc.cluster.local:5432/db"
+    private String getJdbcUrl {
+
+        return "jdbc:postgresql://" + DB_URL + "/" + DB_NAME;
     }
 
     public void service(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
