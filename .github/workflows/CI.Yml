@@ -1,6 +1,6 @@
 name: onlinebookstore
 on:
-    workflow_dispatch:
+  workflow_dispatch:    
 jobs:
   onlinebookstore_build_job:
     runs-on: ubuntu-latest
