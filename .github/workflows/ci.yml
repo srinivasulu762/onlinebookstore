@@ -16,8 +16,3 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Build package
-        run: |
-          echo "Building the online bookstore application..."
-          ls -la
