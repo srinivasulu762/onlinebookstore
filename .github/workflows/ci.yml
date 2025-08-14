@@ -18,4 +18,12 @@ jobs:
           distribution: 'temurin'
       - name: Build with Maven
         run: mvn clean package -DskipTests
-          
+      - name: sonar qulaiy check
+        run:
+           mvn sonar:sonar
+          -Dsonar.projectKey=onlinebookstore
+          -Dsonar.host.url=http://44.201.238.65:9000/
+          -Dsonar.login=${{ .secrets.SONAR_TOKEN }}
+        
+                      
+                     
