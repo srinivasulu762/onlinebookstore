@@ -5,11 +5,13 @@ jobs:
   onlinebookstore_build_job:
     runs-on: ubuntu-latest
     steps:
+        
       - name: Checkout code repository
         uses: actions/checkout@v4
       - name: java setup
         uses: actions/setup-java@v4
         with:
+            
           java-version: '17'
           distribution: 'temurin'  
       - name: build package
