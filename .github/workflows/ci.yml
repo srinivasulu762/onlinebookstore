@@ -23,7 +23,6 @@ jobs:
            mvn sonar:sonar
           -Dsonar.projectKey=onlinebookstore
           -Dsonar.host.url=http://44.201.238.65:9000/
-          -Dsonar.login=${{ .secrets.SONAR_TOKEN }}
-        
+          -Dsonar.login=2f1c0e9d1b5f7e8d4c6a3f4b5a6b7c8d9e0f1g2h        
                       
                      
