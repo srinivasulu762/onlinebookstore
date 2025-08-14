@@ -20,5 +20,4 @@ jobs:
       - name: Build package
         run: |
           echo "Building the online bookstore application..."
-          cd onlinebookstore/WebContent/WEB-INF
           mvn clean package
