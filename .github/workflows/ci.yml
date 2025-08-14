@@ -1,29 +1,25 @@
-name: onlinebookstore
+name: SonarQube Test
 
 on:
   workflow_dispatch:
 
 jobs:
-  onlinebookstore_build_job:
+  sonar:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
-      - name: Build with Maven
-        run: 
-         mvn clean install -DskipTests 
-      - name: SonarQube Quality Check
+          java-version: '17'
+
+      - name: Run SonarQube Analysis
         run: |
-          mvn sonar:sonar \
+          mvn verify sonar:sonar \
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-
-                     
