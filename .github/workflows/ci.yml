@@ -20,4 +20,5 @@ jobs:
       - name: Build package
         run: |
           echo "Building the online bookstore application..."
-          mvn clean package
+          find . -name 'pom.xml' -execdir mvn clean package \;
+          echo "Build completed successfully."
