@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  sonar:
+  build_onlinebookstore:
     runs-on: ubuntu-latest
 
     steps:
