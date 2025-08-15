@@ -16,12 +16,17 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: build package
-        run: mvn install -DskipTests
-        cache:
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          paths:
-            - ~/.m2/repository      
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build project
+        run: mvn install -DskipTests
 
       - name: Run SonarQube Analysis
         run: |
@@ -29,7 +34,3 @@ jobs:
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-
-
-      
-        
