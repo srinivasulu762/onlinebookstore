@@ -16,10 +16,20 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: build package
+        run: mvn install -DskipTests
+        cache:
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          paths:
+            - ~/.m2/repository      
 
       - name: Run SonarQube Analysis
         run: |
           mvn verify sonar:sonar \
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
-            -Dsonar.token=sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
+
+      
+        
