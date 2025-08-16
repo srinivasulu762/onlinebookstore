@@ -34,3 +34,10 @@ jobs:
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
             -Dsonar.token=sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d
+      - name: qualitygate
+        run: |
+         sudo yum install -y jq
+         analysisId=$(curl -s -u $SONAR_TOKEN: "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId" | jq -r '.task.analysisId')
+         echo $analysisId
+
+
