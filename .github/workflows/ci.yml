@@ -30,22 +30,18 @@ jobs:
 
       - name: Run SonarQube Analysis
         id: sonarqube
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           mvn verify sonar:sonar \
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
-            -Dsonar.token=$SONAR_TOKEN | tee sonarqube.log
+            -Dsonar.token=sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d | tee sonarqube.log
           export ceTaskId=$(grep -oP 'ceTaskId=\K[^&]+' sonarqube.log | tail -1)
           echo "ceTaskId=$ceTaskId" >> $GITHUB_ENV
 
       - name: qualitygate
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sudo apt-get update && sudo apt-get install -y jq
-          analysisId=$(curl -s -u $SONAR_TOKEN: "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId" | jq -r '.task.analysisId')
+          analysisId=$(curl -s -u sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId" | jq -r '.task.analysisId')
           echo $analysisId
 
 
