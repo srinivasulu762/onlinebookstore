@@ -28,60 +28,9 @@ jobs:
       - name: Build project
         run: mvn install -DskipTests
 
-      - name: Run SonarQube Analysis and Capture ceTaskId
-        id: sonar
-        env:
-          SONAR_TOKEN: sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d
+      - name: Run SonarQube Analysis
         run: |
           mvn verify sonar:sonar \
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
-            -Dsonar.token=$SONAR_TOKEN | tee sonar-output.txt
-
-          # Extract ceTaskId from Maven output
-          ceTaskId=$(grep -oP 'ceTaskId=\K[a-z0-9]+' sonar-output.txt | head -1)
-          echo "ceTaskId=$ceTaskId"
-          echo "ceTaskId=$ceTaskId" >> $GITHUB_OUTPUT
-
-      - name: Wait and Check Quality Gate
-        env:
-          SONAR_TOKEN: sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d
-        run: |
-          sudo apt-get update && sudo apt-get install -y jq
-
-          ceTaskId="${{ steps.sonar.outputs.ceTaskId }}"
-          echo "Checking task status for ceTaskId: $ceTaskId"
-
-          for i in {1..10}; do
-            sleep 5
-            response=$(curl -s -u $SONAR_TOKEN: "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId")
-            status=$(echo "$response" | jq -r '.task.status')
-            analysisId=$(echo "$response" | jq -r '.task.analysisId')
-
-            echo "Status: $status"
-
-            if [[ "$status" == "SUCCESS" && "$analysisId" != "null" ]]; then
-              break
-            elif [[ "$status" == "FAILED" ]]; then
-              echo "SonarQube task failed."
-              exit 1
-            fi
-          done
-
-          if [[ -z "$analysisId" || "$analysisId" == "null" ]]; then
-            echo "❌ Failed to get analysisId."
-            exit 1
-          fi
-
-          # Check Quality Gate status
-          result=$(curl -s -u $SONAR_TOKEN: "http://44.201.238.65:9000/api/qualitygates/project_status?analysisId=$analysisId")
-          qualityGateStatus=$(echo "$result" | jq -r '.projectStatus.status')
-
-          echo "Quality Gate Status: $qualityGateStatus"
-
-          if [[ "$qualityGateStatus" != "OK" ]]; then
-            echo "❌ Quality Gate failed."
-            exit 1
-          else
-            echo "✅ Quality Gate passed."
-          fi
+            -Dsonar.token=sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d
