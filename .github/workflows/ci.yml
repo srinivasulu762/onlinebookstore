@@ -35,13 +35,52 @@ jobs:
             -Dsonar.projectKey=onlinebookstore \
             -Dsonar.host.url=http://44.201.238.65:9000 \
             -Dsonar.token=sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d | tee sonarqube.log
-          export ceTaskId=$(grep -oP 'ceTaskId=\K[^&]+' sonarqube.log | tail -1)
+
+          ceTaskId=$(grep -oP 'ceTaskId=\K[^&]+' sonarqube.log | tail -1)
+          echo "ceTaskId=$ceTaskId"
           echo "ceTaskId=$ceTaskId" >> $GITHUB_ENV
 
-      - name: qualitygate
+      - name: Check Quality Gate Status
         run: |
           sudo apt-get update && sudo apt-get install -y jq
-          analysisId=$(curl -s -u sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId" | jq -r '.task.analysisId')
-          echo $analysisId
 
+          echo "Using ceTaskId: $ceTaskId"
 
+          # Wait for analysis to complete
+          for i in {1..10}; do
+            sleep 5
+            response=$(curl -s -u sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d: \
+              "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId")
+            status=$(echo "$response" | jq -r '.task.status')
+            analysisId=$(echo "$response" | jq -r '.task.analysisId')
+
+            echo "SonarQube Task Status: $status"
+
+            if [[ "$status" == "SUCCESS" && "$analysisId" != "null" ]]; then
+              break
+            elif [[ "$status" == "FAILED" ]]; then
+              echo "❌ SonarQube task failed."
+              exit 1
+            fi
+          done
+
+          if [[ -z "$analysisId" || "$analysisId" == "null" ]]; then
+            echo "❌ analysisId not found."
+            exit 1
+          fi
+
+          echo "Analysis ID: $analysisId"
+
+          # Get Quality Gate status
+          result=$(curl -s -u sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d: \
+            "http://44.201.238.65:9000/api/qualitygates/project_status?analysisId=$analysisId")
+          qualityGateStatus=$(echo "$result" | jq -r '.projectStatus.status')
+
+          echo "Quality Gate Status: $qualityGateStatus"
+
+          if [[ "$qualityGateStatus" != "OK" ]]; then
+            echo "❌ Quality Gate failed."
+            exit 1
+          else
+            echo "✅ Quality Gate passed."
+          fi
