@@ -37,10 +37,9 @@ jobs:
       - name: Run SonarQube Analysis
         uses: sonarsource/sonarqube-scan-action@master
         env:
-          SONAR_TOKEN: ${{ secrets.TOKEN }}
-        with:
           SONAR_HOST_URL: http://44.201.238.65:9000
-          SONAR_TOKEN: "$SONAR_TOKEN"
+          SONAR_TOKEN: "${{ secrets.SONAR_TOKEN }}"
+        with:   
           projectBaseDir: .
           args: >
            -Dsonar.organization=onlinebookstore
