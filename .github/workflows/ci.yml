@@ -73,6 +73,6 @@ jobs:
         subject: SonarQube Quality Gate Result
         body: |
           The SonarQube quality gate status is: ${{ steps.quality_gate_check.outputs.quality_gate_status }}.
-        to:
+        to: srinivasulukokkinti@gmail.com
 
 
