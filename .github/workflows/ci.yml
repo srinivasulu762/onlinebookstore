@@ -36,11 +36,11 @@ jobs:
         run: echo "$DEVOPS" 
       - name: Run SonarQube Analysis
         uses: sonarsource/sonarqube-scan-action@master
+        env:
+         SONAR_TOKEN: ${{ secrets.TOKEN }}
         with:
-          projectBaseDir: .
-          sonar.host.url: http://44.201.238.65:9000
-          sonar.token: ${{ secrets.TOKEN }}
-          args: >
-            -Dsonar.projectName=onlinebookstore
-      
+         projectBaseDir: .
+         args: >
+          -Dsonar.projectName=onlinebookstore
+          -Dsonar.host.url=http://44.201.238.65:9000
 
