@@ -39,7 +39,8 @@ jobs:
         with:
           projectBaseDir: .
           sonar.host.url: http://44.201.238.65:9000
-          sonar.token: ${{ secrets.SONAR_TOKEN }}
+          sonar.token: ${{ secrets.TOKEN }}
           args: >
             -Dsonar.projectName=onlinebookstore
+      
 
