@@ -8,7 +8,6 @@ on:
 jobs:
   build_onlinebookstore:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -30,11 +29,6 @@ jobs:
       - name: Build project
         run: mvn install -DskipTests
 
-      - name: Testing secrets
-        env:
-          DEVOPS: ${{ secrets.TOKEN }}
-        run: echo "Secret is loaded (not printed for security reasons)"
-
       - name: SonarQube scan
         run: |
           mvn sonar:sonar \
@@ -42,14 +36,11 @@ jobs:
             -Dsonar.token=${{ secrets.TOKEN }} \
             -Dsonar.projectKey=onlinebookstore
 
-      - name: Test SonarQube connectivity
-        run: curl -u "${{ secrets.TOKEN }}:" http://44.201.238.65:9000/api/server/version
-
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
         with:
-          pollingTimeout: 600
+          pollingTimeoutSec: 600
           sonar-host-url: http://44.201.238.65:9000
           sonar-token: ${{ secrets.TOKEN }}
           project-key: onlinebookstore
