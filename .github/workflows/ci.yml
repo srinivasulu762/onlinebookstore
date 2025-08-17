@@ -34,9 +34,7 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}  //Sonar Token generated 
-    
-
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: Quality Gate Check
         id: quality_gate_check
         uses: SonarSource/sonarqube-quality-gate-action@master
@@ -45,7 +43,6 @@ jobs:
           sonar-host-url: http://44.201.238.65:9000
           sonar-token: sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d
           project-key: onlinebookstore
-
       - name: Print Quality Gate Result
         run: |
           if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
