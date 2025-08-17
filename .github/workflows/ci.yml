@@ -1,23 +1,78 @@
-name: CI Workflow
+name: SonarQube Test
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Select branch to run workflow on'
-        required: true
-        default: 'main'
-        type: choice
-        options:
-          - main
-          - develop
-          - feature/awesome-feature
+
 
 jobs:
-  build:
+  build_onlinebookstore:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout selected branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Build project
+      run: mvn install -DskipTests
+
+    - name: sonar cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
+      restore-keys: |
+        ${{ runner.os }}-sonar-    
+
+    - name: Run SonarQube Analysis
+      id: sonarqube
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        mvn verify sonar:sonar \
+          -Dsonar.projectKey=onlinebookstore \
+          -Dsonar.host.url=http://44.201.238.65:9000 \
+          -Dsonar.token=$SONAR_TOKEN
+
+    - name: Quality Gate Check
+      id: quality_gate_check
+      uses: SonarSource/sonarqube-quality-gate-action@v2
+      with:
+        sonar-host-url: http://44.201.238.65:9000
+        sonar-token: ${{ secrets.SONAR_TOKEN }}
+        project-key: onlinebookstore
+
+    - name: Print Quality Gate Result
+      run: |
+        if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
+          echo "Quality gate passed successfully!"
+        else
+          echo "Quality gate failed!"
+        fi
+    - name: email notification
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: SonarQube Quality Gate Result
+        body: |
+          The SonarQube quality gate status is: ${{ steps.quality_gate_check.outputs.quality_gate_status }}.
+        to:
+
+
