@@ -32,12 +32,10 @@ jobs:
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectKey: onlinebookstore
           sonar.host.url: http://44.201.238.65:9000
-          sonar.token: $SONAR_TOKEN
+          sonar.token: ${{ secrets.SONAR_TOKEN }}
 
       - name: Quality Gate Check
         id: quality_gate_check
