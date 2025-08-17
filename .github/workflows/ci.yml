@@ -43,11 +43,14 @@ jobs:
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
+        
         env:
          SONAR_TOKEN: ${{ secrets.TOKEN }}
         with:
+          pollingTimeout: 600
           sonar_host_url: http://44.201.238.65:9000
           project_key: onlinebookstore
+
       - name: Print Quality Gate Result
         run: |
           if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
