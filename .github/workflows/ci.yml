@@ -29,39 +29,36 @@ jobs:
 
       - name: Build project
         run: mvn install -DskipTests
-      
-      - name: Testing secerts
+
+      - name: Testing secrets
         env:
           DEVOPS: ${{ secrets.TOKEN }}
-        run: echo "$DEVOPS" 
-      - name: sonarqube scan
+        run: echo "Secret is loaded (not printed for security reasons)"
+
+      - name: SonarQube scan
         run: |
-         mvn sonar:sonar \
-         -Dsonar.host.url=http://44.201.238.65:9000 \
-         -Dsonar.token=${{ secrets.TOKEN }} \
-         -Dsonar.projectKey=onlinebookstore
+          mvn sonar:sonar \
+            -Dsonar.host.url=http://44.201.238.65:9000 \
+            -Dsonar.token=${{ secrets.TOKEN }} \
+            -Dsonar.projectKey=onlinebookstore
+
       - name: Test SonarQube connectivity
-        run: curl -u "${{ secrets.TOKEN }}:" http://44.201.238.65:9000/api/server/version 
-         
+        run: curl -u "${{ secrets.TOKEN }}:" http://44.201.238.65:9000/api/server/version
 
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
-        
-        env:
-         SONAR_TOKEN: ${{ secrets.TOKEN }}
         with:
-          pollingTimeoutSeconds: 600
-          sonar_host_url: http://44.201.238.65:9000
-          project_key: onlinebookstore
+          pollingTimeout: 600
+          sonar-host-url: http://44.201.238.65:9000
+          sonar-token: ${{ secrets.TOKEN }}
+          project-key: onlinebookstore
 
       - name: Print Quality Gate Result
         run: |
           if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
-            echo "Quality gate passed successfully!"
+            echo "✅ Quality gate passed successfully!"
           else
-            echo "Quality gate failed!"
+            echo "❌ Quality gate failed!"
+            exit 1
           fi
-
-
-
