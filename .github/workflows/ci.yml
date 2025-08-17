@@ -33,5 +33,13 @@ jobs:
       - name: Testing secerts
         env:
           DEVOPS: ${{ secrets.TOKEN }}
-        run: echo "$DEVOPS"  
+        run: echo "$DEVOPS" 
+      - name: Run SonarQube Analysis
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          projectKey: onlinebookstore
+          sonar.host.url: http://http://44.201.238.65:9000
+          sonar.token: "$SONAR_TOKEN"   
 
