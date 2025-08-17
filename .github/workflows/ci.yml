@@ -41,6 +41,6 @@ jobs:
         with:
          projectBaseDir: .
          args: >
-          -Dsonar.projectName=onlinebookstore
+          -Dsonar.projectKey=onlinebookstore 
           -Dsonar.host.url=http://44.201.238.65:9000
 
