@@ -1,7 +1,9 @@
-name: SonarQube Test
+name: soanr-queue-test
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+     - master
 
 
 jobs:
