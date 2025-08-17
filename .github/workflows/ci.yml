@@ -1,86 +1,23 @@
-name: SonarQube Test
+name: CI Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Select branch to run workflow on'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - develop
+          - feature/awesome-feature
 
 jobs:
-  build_onlinebookstore:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
+      - name: Checkout selected branch
         uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Build project
-        run: mvn install -DskipTests
-
-      - name: Run SonarQube Analysis
-        id: sonarqube
-        run: |
-          mvn verify sonar:sonar \
-            -Dsonar.projectKey=onlinebookstore \
-            -Dsonar.host.url=http://44.201.238.65:9000 \
-            -Dsonar.token=sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d | tee sonarqube.log
-
-          ceTaskId=$(grep -oP 'ceTaskId=\K[^&]+' sonarqube.log | tail -1)
-          echo "ceTaskId=$ceTaskId"
-          echo "ceTaskId=$ceTaskId" >> $GITHUB_ENV
-
-      - name: Check Quality Gate Status
-        run: |
-          sudo apt-get update && sudo apt-get install -y jq
-
-          echo "Using ceTaskId: $ceTaskId"
-
-          # Wait for analysis to complete
-          for i in {1..10}; do
-            sleep 5
-            response=$(curl -s -u sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d: \
-              "http://44.201.238.65:9000/api/ce/task?id=$ceTaskId")
-            status=$(echo "$response" | jq -r '.task.status')
-            analysisId=$(echo "$response" | jq -r '.task.analysisId')
-
-            echo "SonarQube Task Status: $status"
-
-            if [[ "$status" == "SUCCESS" && "$analysisId" != "null" ]]; then
-              break
-            elif [[ "$status" == "FAILED" ]]; then
-              echo "❌ SonarQube task failed."
-              exit 1
-            fi
-          done
-
-          if [[ -z "$analysisId" || "$analysisId" == "null" ]]; then
-            echo "❌ analysisId not found."
-            exit 1
-          fi
-
-          echo "Analysis ID: $analysisId"
-
-          # Get Quality Gate status
-          result=$(curl -s -u sqa_01bfe635c0341e1294a28f530e6dacb0b1bea75d: \
-            "http://44.201.238.65:9000/api/qualitygates/project_status?analysisId=$analysisId")
-          qualityGateStatus=$(echo "$result" | jq -r '.projectStatus.status')
-
-          echo "Quality Gate Status: $qualityGateStatus"
-
-          if [[ "$qualityGateStatus" != "OK" ]]; then
-            echo "❌ Quality Gate failed."
-            exit 1
-          else
-            echo "✅ Quality Gate passed."
-          fi
+          ref: ${{ github.event.inputs.branch }}
