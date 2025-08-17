@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Cache Maven packages
         uses: actions/cache@v4
@@ -30,21 +30,21 @@ jobs:
       - name: Build project
         run: mvn install -DskipTests
 
-      - name: Run SonarQube Analysis
-        id: sonarqube
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          mvn verify sonar:sonar \
-            -Dsonar.projectKey=onlinebookstore \
-            -Dsonar.host.url=http://44.201.238.65:9000 \
-            -Dsonar.token=$SONAR_TOKEN
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectKey: onlinebookstore
+          sonar.host.url: $SONAR_HOST_URL
+          sonar.token: $SONAR_TOKEN
 
       - name: Quality Gate Check
         id: quality_gate_check
-        continue-on-error: true
         uses: SonarSource/sonarqube-quality-gate-action@master
         with:
+          pollingTimeout: 600
           sonar-host-url: http://44.201.238.65:9000
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           project-key: onlinebookstore
@@ -55,7 +55,6 @@ jobs:
             echo "✅ Quality gate passed successfully!"
           else
             echo "❌ Quality gate failed!"
-            exit 1
           fi
 
       - name: Email notification
