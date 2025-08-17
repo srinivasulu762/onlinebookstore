@@ -38,15 +38,7 @@ jobs:
         run: |
          mvn sonar:sonar \
          -Dsonar.host.url=http://44.201.238.65:9000
-         -Dsonar.login=${{ secrets.TOKEN }}
+         -Dsonar.token=${{ secrets.TOKEN }}
          -Dsonar.projectKey=onlinebookstore \  
-      - name: Run SonarQube Analysis
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-         SONAR_TOKEN: ${{ secrets.TOKEN }}
-        with:
-         projectBaseDir: .
-         args: >
-          -Dsonar.projectKey=onlinebookstore 
-          -Dsonar.host.url=http://44.201.238.65:9000
+    
 
