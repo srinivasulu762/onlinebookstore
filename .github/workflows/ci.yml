@@ -31,6 +31,7 @@ jobs:
     - name: Build project
       run: mvn install -DskipTests
 
+
     - name: Run SonarQube Analysis
       id: sonarqube
       env:
@@ -43,7 +44,7 @@ jobs:
 
     - name: Quality Gate Check
       id: quality_gate_check
-      uses: SonarSource/sonarqube-quality-gate-action@v2
+      uses: SonarSource/sonarqube-quality-gate-action@master
       with:
         sonar-host-url: http://44.201.238.65:9000
         sonar-token: ${{ secrets.SONAR_TOKEN }}
