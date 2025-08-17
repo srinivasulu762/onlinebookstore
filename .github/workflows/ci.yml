@@ -40,6 +40,10 @@ jobs:
          -Dsonar.host.url=http://44.201.238.65:9000 \
          -Dsonar.token=${{ secrets.TOKEN }} \
          -Dsonar.projectKey=onlinebookstore
+      - name: Test SonarQube connectivity
+        run: curl -u "${{ secrets.TOKEN }}:" http://44.201.238.65:9000/api/server/version 
+         
+
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
