@@ -37,8 +37,7 @@ jobs:
       - name: sonarqube scan
         run: |
          mvn sonar:sonar \
-         -Dsonar.host.url=http://44.201.238.65:9000
-         -Dsonar.token=${{ secrets.TOKEN }}
-         -Dsonar.projectKey=onlinebookstore \  
-    
+         -Dsonar.host.url=http://44.201.238.65:9000 \
+         -Dsonar.token=${{ secrets.TOKEN }} \
+         -Dsonar.projectKey=onlinebookstore
 
