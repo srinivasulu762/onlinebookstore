@@ -29,39 +29,9 @@ jobs:
 
       - name: Build project
         run: mvn install -DskipTests
+      
+      - name: Testing secerts
+        env:
+          DEVOPS: ${{ secrets.TOKEN }}
+        run: echo "$DEVOPS"  
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        with:
-          projectKey: onlinebookstore
-          sonar.host.url: http://44.201.238.65:9000
-          sonar.token: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Quality Gate Check
-        id: quality_gate_check
-        uses: SonarSource/sonarqube-quality-gate-action@master
-        with:
-          pollingTimeout: 600
-          sonar-host-url: http://44.201.238.65:9000
-          sonar-token: ${{ secrets.SONAR_TOKEN }}
-          project-key: onlinebookstore
-      - name: Print Quality Gate Result
-        run: |
-          if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
-            echo "✅ Quality gate passed successfully!"
-          else
-            echo "❌ Quality gate failed!"
-          fi
-
-      - name: Email notification
-        if: always()
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: SonarQube Quality Gate Result
-          body: |
-            The SonarQube quality gate status is: ${{ steps.quality_gate_check.outputs.quality_gate_status }}.
-          to: srinivasulukokkinti@gmail.com
