@@ -41,10 +41,11 @@ jobs:
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.TOKEN }}
+          SONAR_HOST_URL: http://44.201.238.65:9000
         with:
           pollingTimeoutSec: 600
-          sonar-host-url: http://44.201.238.65:9000
-          sonar-token: sqa_03f8053db6804951102b9f6bc2657119e23ed5b9
           project-key: onlinebookstore
 
       - name: Print Quality Gate Result
