@@ -37,6 +37,7 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=onlinebookstore
+            -Dsonar.java.binaries=target/classes
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
