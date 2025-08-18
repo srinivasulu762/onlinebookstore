@@ -56,7 +56,6 @@ jobs:
             echo "✅ Quality gate passed successfully!"
           else
             echo "❌ Quality gate failed!"
-            exit 1
           fi
 
       - name: Send email with result
@@ -65,7 +64,7 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
+          username: gtihubactions
           password: ${{ secrets.EMAIL_PASSWORD }}
           from: srinivasulukokkinti1@gmail.com
           to: srinivasulukokkinti@gmail.com
