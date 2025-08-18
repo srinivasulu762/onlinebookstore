@@ -33,7 +33,7 @@ jobs:
         run: |
           mvn -X sonar:sonar \
             -Dsonar.host.url=http://44.201.238.65:9000 \
-            -Dsonar.token=${{ secrets.TOKEN }} \
+            -Dsonar.token=sqa_03f8053db6804951102b9f6bc2657119e23ed5b9 \
             -Dsonar.projectKey=onlinebookstore
 
       - name: Check Quality Gate
@@ -42,7 +42,7 @@ jobs:
         with:
           pollingTimeoutSec: 600
           sonar-host-url: http://44.201.238.65:9000
-          sonar-token: ${{ secrets.TOKEN }}
+          sonar-token: sqa_03f8053db6804951102b9f6bc2657119e23ed5b9
           project-key: onlinebookstore
 
       - name: Print Quality Gate Result
