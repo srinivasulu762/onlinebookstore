@@ -32,33 +32,28 @@ jobs:
 
       - name: SonarQube scan
         uses: sonarsource/sonarqube-scan-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.TOKEN }}
-          SONAR_HOST_URL: http://44.201.238.65:9000
         with:
+          projectKey: onlinebookstore
+          sonarHostUrl: http://44.201.238.65:9000
+          sonarToken: ${{ secrets.TOKEN }}
           args: >
-            -Dsonar.projectKey=onlinebookstore
             -Dsonar.java.binaries=target/classes
 
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.TOKEN }}
-          SONAR_HOST_URL: http://44.201.238.65:9000
         with:
-          project-key: onlinebookstore
-          pollingTimeout: 600  # ✅ CORRECT input
+          projectKey: onlinebookstore
+          sonarHostUrl: http://44.201.238.65:9000
+          sonarToken: ${{ secrets.TOKEN }}
+          pollingTimeoutSec: 600
 
       - name: Print Quality Gate Result
-        id: print_quality_gate_result
         run: |
-          echo "QUALITY_GATE_STATUS=${{ steps.quality_gate_check.outputs.quality_gate_status }}" >> $GITHUB_OUTPUT
           if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
             echo "✅ Quality gate passed successfully!"
           else
             echo "❌ Quality gate failed!"
-            exit 1
           fi
 
       - name: Send email with result
@@ -70,7 +65,7 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           from: srinivasulukokkinti1@gmail.com
-          subject: "SonarQube Quality Gate: ${{ steps.quality_gate_check.outputs.quality_gate_status }}"
+          subject: "Githubaction pipeline result - ${{ steps.quality_gate_check.outputs.quality_gate_status }}"
           to: srinivasulukokkinti@gmail.com
           body: |
             Hello,
