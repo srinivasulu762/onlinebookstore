@@ -32,20 +32,23 @@ jobs:
 
       - name: SonarQube scan
         uses: sonarsource/sonarqube-scan-action@v2
+        env:
+          SONAR_TOKEN: ${{ secrets.TOKEN }}
+          SONAR_HOST_URL: http://44.201.238.65:9000
         with:
-          projectKey: onlinebookstore
-          sonarHostUrl: http://44.201.238.65:9000
-          sonarToken: ${{ secrets.TOKEN }}
-          args: >
+           args: >
+            -Dsonar.projectKey=onlinebookstore
             -Dsonar.java.binaries=target/classes
+
 
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
+        env: 
+          SONAR_TOKEN: ${{ secrets.TOKEN }}
+          SONAR_HOST_URL: http://44.201.238.65:9000
         with:
-          projectKey: onlinebookstore
-          sonarHostUrl: http://44.201.238.65:9000
-          sonarToken: ${{ secrets.TOKEN }}
+          project-Key: onlinebookstore
           pollingTimeoutSec: 600
 
       - name: Print Quality Gate Result
