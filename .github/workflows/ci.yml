@@ -8,6 +8,7 @@ on:
 jobs:
   build_onlinebookstore:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -38,6 +39,7 @@ jobs:
           args: >
             -Dsonar.projectKey=onlinebookstore
             -Dsonar.java.binaries=target/classes
+
       - name: Check Quality Gate
         id: quality_gate_check
         uses: sonarsource/sonarqube-quality-gate-action@master
@@ -45,14 +47,36 @@ jobs:
           SONAR_TOKEN: ${{ secrets.TOKEN }}
           SONAR_HOST_URL: http://44.201.238.65:9000
         with:
-          pollingTimeoutSec: 600
           project-key: onlinebookstore
+          pollingTimeout: 600  # ✅ CORRECT input
 
       - name: Print Quality Gate Result
+        id: print_quality_gate_result
         run: |
+          echo "QUALITY_GATE_STATUS=${{ steps.quality_gate_check.outputs.quality_gate_status }}" >> $GITHUB_OUTPUT
           if [ "${{ steps.quality_gate_check.outputs.quality_gate_status }}" = "PASSED" ]; then
             echo "✅ Quality gate passed successfully!"
           else
             echo "❌ Quality gate failed!"
             exit 1
           fi
+
+      - name: Send email with result
+        uses: dawidd6/action-send-mail@v3
+        if: always()
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "SonarQube Quality Gate: ${{ steps.quality_gate_check.outputs.quality_gate_status }}"
+          to: srinivasulukokkinti@gmail.com
+          body: |
+            Hello,
+
+            The SonarQube Quality Gate has completed for the project **onlinebookstore**.
+
+            Quality Gate Status: ${{ steps.quality_gate_check.outputs.quality_gate_status }}
+
+            Regards,
+            DevOps Pipeline
