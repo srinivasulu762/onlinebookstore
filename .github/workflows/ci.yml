@@ -57,24 +57,3 @@ jobs:
           else
             echo "❌ Quality gate failed!"
           fi
-
-      - name: Send email with result
-        uses: dawidd6/action-send-mail@v3
-        if: always()
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: gtihubactions
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          from: srinivasulukokkinti1@gmail.com
-          to: srinivasulukokkinti@gmail.com
-          subject: "GitHub Actions Pipeline Result - ${{ steps.quality_gate_check.outputs.quality_gate_status }}"
-          body: |
-            Hello,
-
-            The SonarQube Quality Gate has completed for the project **onlinebookstore**.
-
-            Quality Gate Status: ${{ steps.quality_gate_check.outputs.quality_gate_status }}
-
-            Regards,  
-            DevOps Pipeline
