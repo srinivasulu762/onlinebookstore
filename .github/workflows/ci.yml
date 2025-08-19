@@ -30,15 +30,6 @@ jobs:
       - name: Build project
         run: mvn install -DskipTests
 
-      - name: SonarQube scan
-        uses: sonarsource/sonarqube-scan-action@v2
-        with:
-          projectKey: onlinebookstore
-          sonarHostUrl: http://44.201.238.65:9000
-          sonarToken: ${{ secrets.TOKEN }}
-          args: >
-            -Dsonar.java.binaries=target/classes
-
       - name: dockerimage 
         run: |
           docker build -t srinivasulukokkinti/onlinebookstore:latest .
