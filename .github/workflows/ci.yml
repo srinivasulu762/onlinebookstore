@@ -32,7 +32,7 @@ jobs:
 
       - name: dockerimage 
         run: |
-          docker build -t srinivasulukokkinti/onlinebookstore:latest
+          docker build -t srinivasulukokkinti/onlinebookstore:latest .
           docker login -u srinivasulukokkinti -p ${{ secrets.DOCKER_PASSWORD }}
           docker push srinivasulukokkinti/onlinebookstore:latest
           
