@@ -2,4 +2,4 @@
 cd /opt/tomcat8/bin
 ./startup.sh
 
-String apiKey = "FAKE123456SECRETKEY";
+export API_KEY="sk_test_ABC123SECRETKEYEXAMPLE"
