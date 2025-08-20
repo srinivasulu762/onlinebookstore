@@ -1,0 +1,4 @@
+[allowlist]
+description = "Allowlisted items will be ignored"
+regexes = []
+paths = []

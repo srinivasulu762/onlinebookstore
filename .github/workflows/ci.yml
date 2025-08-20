@@ -1,4 +1,4 @@
-name: sonar-queue-test
+name: partose pipeline
 
 on:
   push:
@@ -6,9 +6,20 @@ on:
       - master
 
 jobs:
-  build_onlinebookstore:
+  gitleaksscan:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: --config .gitleaks.toml --verbose --redact --exit-code 1
+
+  build_onlinebookstore:
+    needs: gitleaksscan
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -30,9 +41,27 @@ jobs:
       - name: Build project
         run: mvn install -DskipTests
 
-      - name: dockerimage 
+      - name: Build and Push Docker image
         run: |
           docker build -t srinivasulukokkinti/onlinebookstore:latest .
-          docker login -u srinivasulukokkinti -p ${{ secrets.DOCKER_PASSWORD }}
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u srinivasulukokkinti --password-stdin
           docker push srinivasulukokkinti/onlinebookstore:latest
-          
+          docker logout
+
+  kubernatesdeployjob:
+    needs: build_onlinebookstore
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+
+      - name: Configure kubeconfig and deploy
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
+          export KUBECONFIG=kubeconfig
+          kubectl apply -f deployment/deployment-dev.yaml
