@@ -15,7 +15,7 @@ jobs:
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         with:
-          args: --config .gitleaks.toml --source . --verbose --redact --exit-code 1
+          args: --config .gitleaks.toml --verbose --redact --exit-code 1
 
   build_onlinebookstore:
     needs: gitleaksscan
