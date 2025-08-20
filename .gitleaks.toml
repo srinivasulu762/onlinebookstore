@@ -1,4 +1,4 @@
 [allowlist]
 description = "Allowlisted items will be ignored"
 regexes = []
-paths = ["scripts/", "*.sh"]
+paths = ["scripts/", ".*\\.sh$"]
