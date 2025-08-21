@@ -34,8 +34,8 @@ jobs:
 
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
-        run: 
-          args: gitleaks detect --source . --verbose --redact --exit-code 1
+        with:
+        args: gitleaks detect --source . --verbose --redact --exit-code 1
 
   build_onlinebookstore:
     needs: gitleaksscan
