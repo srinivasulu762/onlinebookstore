@@ -5,25 +5,25 @@ on:
     branches:
       - develop
   workflow_dispatch:
-  inputs:
-    branch:
-      description: 'Select branch to run workflow on'
-      required: true
-      default: 'develop'
-      type: choice
-      options:
-        - main
-        - develop
-        - feature/*
-    environment:
-      description: 'Select environment'
-      required: true
-      default: 'test'
-      type: choice
-      options:
-        - test
-        - dev
-        - prod
+    inputs:
+      branch:
+        description: 'Select branch to run workflow on'
+        required: true
+        default: 'develop'
+        type: choice
+        options:
+          - main
+          - develop
+          - feature/*
+      environment:
+        description: 'Select environment'
+        required: true
+        default: 'test'
+        type: choice
+        options:
+          - test
+          - dev
+          - prod
 
 jobs:
   gitleaksscan:
@@ -35,11 +35,14 @@ jobs:
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         with:
-        args: gitleaks detect --source . --verbose --redact --exit-code 1
+          args: detect --source . --verbose --redact --exit-code 1
 
   build_onlinebookstore:
     needs: gitleaksscan
     runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.event.inputs.branch }}
+      DEPLOY_ENV: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
