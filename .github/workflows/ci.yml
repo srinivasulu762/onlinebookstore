@@ -3,7 +3,27 @@ name: partose pipeline
 on:
   push:
     branches:
-      - master
+      - develop
+  workflow_dispatch:
+  inputs:
+    branch:
+      description: 'Select branch to run workflow on'
+      required: true
+      default: 'develop'
+      type: choice
+      options:
+        - main
+        - develop
+        - feature/*
+    environment:
+      description: 'Select environment'
+      required: true
+      default: 'test'
+      type: choice
+      options:
+        - test
+        - dev
+        - prod
 
 jobs:
   gitleaksscan:
@@ -14,7 +34,8 @@ jobs:
 
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
-        run: gitleaks detect --source . --verbose --redact --exit-code 1
+        run: 
+          args: gitleaks detect --source . --verbose --redact --exit-code 1
 
   build_onlinebookstore:
     needs: gitleaksscan
