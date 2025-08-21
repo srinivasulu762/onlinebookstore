@@ -15,7 +15,7 @@ jobs:
       - name: Run Gitleaks
         uses: gitleaks/gitleaks-action@v2
         with:
-          args: --config .gitleaks.toml --verbose --redact --exit-code 1
+          args: gitleaks detect --source . --verbose --redact --exit-code 1
 
   build_onlinebookstore:
     needs: gitleaksscan
@@ -47,21 +47,3 @@ jobs:
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u srinivasulukokkinti --password-stdin
           docker push srinivasulukokkinti/onlinebookstore:latest
           docker logout
-
-  kubernatesdeployjob:
-    needs: build_onlinebookstore
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
-        with:
-          version: 'latest'
-
-      - name: Configure kubeconfig and deploy
-        run: |
-          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-          export KUBECONFIG=kubeconfig
-          kubectl apply -f deployment/deployment-dev.yaml
