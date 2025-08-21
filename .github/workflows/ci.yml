@@ -1,18 +1,20 @@
+
+
 name: partose pipeline
 
 on:
   push:
     branches:
-      - develop
+      - master
   workflow_dispatch:
     inputs:
       branch:
         description: 'Select branch to run workflow on'
         required: true
-        default: 'develop'
+        default: 'master'
         type: choice
         options:
-          - main
+          - master
           - develop
           - feature/*
       environment:
@@ -24,7 +26,6 @@ on:
           - test
           - dev
           - prod
-
 jobs:
   gitleaksscan:
     runs-on: ubuntu-latest
@@ -39,10 +40,14 @@ jobs:
 
   build_onlinebookstore:
     needs: gitleaksscan
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.event.inputs.branch == 'master' &&
+       github.event.inputs.environment == 'test')
+    environment: test
+
     runs-on: ubuntu-latest
-    env:
-      TARGET_BRANCH: ${{ github.event.inputs.branch }}
-      DEPLOY_ENV: ${{ github.event.inputs.environment }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
