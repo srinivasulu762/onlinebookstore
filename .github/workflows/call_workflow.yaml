@@ -6,4 +6,6 @@ on:
 jobs:
   call-gretting:
     uses: ./.github/workflows/reuse.yaml
+    with:
+      name: "srinu"
     
