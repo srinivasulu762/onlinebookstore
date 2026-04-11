@@ -1,0 +1,12 @@
+name: resuseworkflow
+on:
+ workflow_call:
+jobs:
+  resuavlaeflow:
+    runs-on: ubuntu-24.04
+    steps:
+     - name: this is resuableflow
+       run: echo "tis is rasialeflow"
+   
+ 
+ 
